@@ -3,6 +3,7 @@ package com.manuel.store.controllers;
 
 
 import com.manuel.store.dtos.UserDto;
+import com.manuel.store.mappers.UserMapper;
 import com.manuel.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
 
     @GetMapping
@@ -25,7 +27,7 @@ public class UserController {
 
         return userRepository.findAll()
                 .stream()
-                .map(user -> new UserDto(user.getId(), user.getName(), user.getEmail()))
+                .map(userMapper::toDto)
                 .toList();
     }
 
@@ -37,9 +39,9 @@ public class UserController {
 
             return ResponseEntity.notFound().build();
         }
-        var userDto = new UserDto(user.getId(), user.getName(), user.getEmail());
 
-        return ResponseEntity.ok(userDto);
+
+        return ResponseEntity.ok(userMapper.toDto(user));
 
     }
 }
