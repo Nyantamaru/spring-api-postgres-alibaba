@@ -4,7 +4,6 @@ package com.manuel.store.controllers;
 import com.manuel.store.dtos.UserDto;
 import com.manuel.store.mappers.UserMapper;
 import com.manuel.store.repositories.UserRepository;
-import jakarta.persistence.SecondaryTable;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,10 @@ public class UserController {
 
     @GetMapping
     public Iterable<UserDto> getAllUsers(
-            @RequestParam(required = false, defaultValue = "", name="sort") String sortBy
+
+            @RequestParam(required = false, defaultValue = "", name = "sort") String sortBy
     ) {
+
         if (!Set.of("name", "email").contains(sortBy))
             sortBy = "name";
         return userRepository.findAll(Sort.by(sortBy))
@@ -45,5 +46,9 @@ public class UserController {
 
         return ResponseEntity.ok(userMapper.toDto(user));
 
+    }
+    @PostMapping
+    public UserDto createUser(@RequestBody  UserDto data){
+        return data;
     }
 }
